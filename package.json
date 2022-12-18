@@ -2,9 +2,9 @@
   "name": "node_js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "1_1.js",
   "scripts": {
-    "start": "nodemon --exec node index.js",
+    "start_1": "nodemon --exec node 1_1.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
