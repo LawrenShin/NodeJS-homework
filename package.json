@@ -1,5 +1,6 @@
 {
   "name": "node_js",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "1_1.js",
@@ -12,5 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "node-xlsx": "^0.21.0"
   }
 }
