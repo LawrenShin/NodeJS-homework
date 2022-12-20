@@ -1,11 +1,11 @@
 {
   "name": "node_js",
-  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "1_1.js",
   "scripts": {
     "start_1": "nodemon --exec node 1_1.js",
+    "start_2": "nodemon --exec node 1_2.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
