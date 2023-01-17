@@ -1,56 +1,74 @@
+// EXAMPLE of user
+// {
+//     "id": "5354554357345",
+//     "login": "Olaf",
+//     "age": 0,
+//     "password": 'a2A',
+//     "isDeleted": false
+// }
+
 const defMap = Object.entries(
     {
         "403357.1108310962": {
-            "name": "Asteriks",
-            "kills": 90,
+            "id": "403357.1108310962",
+            "login": "Asteriks",
+            "age": 90,
             "password": "g4G",
             "isDeleted": false
         },
         "403353.9108310968": {
-            "name": "Varmid",
-            "kills": 9,
+            "id": "403353.9108310968",
+            "login": "Varmid",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "8687296.470471686": {
-            "name": "Olaf",
-            "kills": 9,
+            "id": "8687296.470471686",
+            "login": "Olaf",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "8489232.1256684": {
-            "name": "Hold",
-            "kills": 9,
+            "id": "8489232.1256684",
+            "login": "Hold",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "912165.7183257148": {
-            "name": "Tor",
-            "kills": 9,
+            "id": "912165.7183257148",
+            "login": "Tor",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "5938013.000591949": {
-            "name": "Goro",
-            "kills": 9,
+            "id": "5938013.000591949",
+            "login": "Goro",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "2758694.634640233": {
-            "name": "Valhen",
-            "kills": 9,
+            "id": "2758694.634640233",
+            "login": "Valhen",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "4539556.105923821": {
-            "name": "Valder",
-            "kills": 9,
+            "id": "4539556.105923821",
+            "login": "Valder",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         },
         "2336200.519486169": {
-            "name": "Varmin",
-            "kills": 9,
+            "id": "2336200.519486169",
+            "login": "Varmin",
+            "age": 9,
             "password": "g4G",
             "isDeleted": false
         }
@@ -58,21 +76,19 @@ const defMap = Object.entries(
 );
 
 
-const express = require('express');
-const Joi = require('joi');
+import express from 'express';
+import Joi from 'joi';
+import userSchema from './2_2';
+import { v4 as uuidv4 } from 'uuid';
+
+// consts
 const app = express();
 const router = express.Router();
-const vikingSchema = require('./2_2');
+const db = new Map(defMap);
+const port = process.env.PORT || 3000;
 
-// EXAMPLE of viking
-// {
-//     "id": "5354554357345",
-//     "name": "Olaf",
-//     "kills": 0,
-//     "password": 'a2A',
-//     "isDeleted": false
-// }
 
+// helpers
 const mapErrors = (schemaErrors) => {
     const errors = schemaErrors.map(({ message, path }) => ({ message, path }));
 
@@ -81,78 +97,78 @@ const mapErrors = (schemaErrors) => {
         errors,
     };
 };
-
-// helpers
-const vikingGetter = id => {
-    const viking = valhalla.get(id);
-    if (!viking || viking.isDeleted) {
+const userGetter = id => {
+    const user = db.get(id);
+    if (!user || user.isDeleted) {
         return false;
     }
 
-    return viking;
+    const { isDeleted, ...rest } = user;
+    return rest;
 };
+const noServiceFields = arr => arr.map(({isDeleted, ...rest}) => rest);
 
 // middlewares
-const getViking = (req, res) => {
-    const viking = vikingGetter(req.params.id);
+const getUser = (req, res) => {
+    const user = userGetter(req.params.id);
 
-    if (!viking) {
-        res.status(404).json({ error: 'Viking not found.' })
+    if (!user) {
+        res.status(404).json({ error: 'User not found.' })
     } else {
-        res.json(viking);
+        res.json(user);
     }
 };
-const removeViking = (req, res) => {
-    const viking = vikingGetter(req.params.id);
-    if (!viking) {
-        res.json({message: `Viking ${ viking.name } not found`});
+const removeUser = (req, res) => {
+    const user = userGetter(req.params.id);
+    if (!user) {
+        res.json({message: `User ${ user.login } not found`});
     } else {
-        valhalla.set(req.params.id, { ...viking, isDeleted: true });
-        res.json({message: `Viking ${ viking.name } has been removed`});
+        db.set(req.params.id, { ...user, isDeleted: true });
+        res.json({message: `User ${ user.login } has been removed`});
     }
 };
-const updateViking = (req, res) => {
-    const viking = vikingGetter(req.params.id);
+const updateUser = (req, res) => {
+    const user = userGetter(req.params.id);
     const updates = req.body;
-    if (!viking) {
-        res.json({message: `Viking ${ viking.name } not found`});
+    if (!user) {
+        res.json({message: `User ${ user.login } not found`});
     } else {
-        valhalla.set(req.params.id, { ...viking, ...updates });
-        res.json({message: `Viking ${ viking.name } has been updated`});
+        db.set(req.params.id, { ...user, ...updates });
+        res.json({message: `User ${ user.login } has been updated`});
     }
 };
-const addViking = (req, res) => {
-    const newViking = req.body;
-    const result = vikingSchema.validate(newViking, { abortEarly: false, allowUnknown: false });
+const addUser = (req, res) => {
+    const newUser = req.body;
+    const result = userSchema.validate(newUser, { abortEarly: false, allowUnknown: false });
 
     if (Joi.isError(result.error)) {
         const mapped = mapErrors(result.error.details);
-        res.status(400);
-        res.json(mapped);
+        res.status(400).json(mapped);
     } else {
-        const id = `${Math.random() * 10000000}`;
-        valhalla.set(id, newViking);
-        res.status(201);
-        res.json({ ...newViking, id });
+        const id = uuidv4();
+        db.set(id, { ...newUser, isDeleted: false });
+        res.status(201).json({ ...newUser, id });
     }
 };
-const getValhalla = (req, res) => {
-    const entries = Object.fromEntries(valhalla);
+const getUserList = (req, res) => {
+    const entries = [...db.values()];
     if (!Object.keys(entries).length) {
-        res.json({message: 'Valhalla is empty.'});
+        res.json({message: 'Database is empty.'});
     } else {
-        res.json(entries);
+        res.json(noServiceFields(entries));
     }
 };
-const getValhallaByName = (req, res) => {
-    const { name } = req.params;
+const getUserListByName = (req, res) => {
+    const { login } = req.params;
     const { limit } = req.query;
-    if (!name) {
-        res.json({message: 'Name can not be empty'});
+    if (!login) {
+        res.json({message: 'Login can not be empty'});
     } else {
-        const sorted = [...valhalla]
-            .filter(v => ~v[1].name.indexOf(name))
-            .sort(([k1], [k2]) => k1.localeCompare(k2));
+        const sorted = noServiceFields(
+            [...db.values()]
+                .filter(u => ~u.login.indexOf(login))
+                .sort((u1, u2) => u1.login.localeCompare(u2.login))
+        );
 
         res.json({ sorted: limit ? sorted.splice(0, limit) : sorted});
     }
@@ -160,34 +176,25 @@ const getValhallaByName = (req, res) => {
 
 
 // API by id
-router.route('/valhalla/:id')
-    .get(getViking)
-    .delete(removeViking)
-    .patch(updateViking);
-
-// API add
-router.route('/valhalla/add')
-    .post(addViking);
+router.route('/users/:id')
+    .get(getUser)
+    .delete(removeUser)
+    .patch(updateUser);
 
 // API list
-router.route('/valhalla')
-    .get(getValhalla);
-router.route('/valhalla/byName/:name')
-    .get(getValhallaByName);
+router.route('/users')
+    .post(addUser)
+    .get(getUserList);
+router.route('/users/byName/:login')
+    .get(getUserListByName);
 
 
-// init
-const valhalla = new Map(defMap);
-const port = process.env.PORT || 3000;
-
-app.use('/', express.json());
-app.use('/', router);
+app.use(express.json());
+app.use(router);
 app.listen(port);
 
 
 
 
 // QUESTIONS
-// where did id go once I placed # in front of value in url? Because viking/:id works same as /valhalla when I do.
 // middlewares are chained and composed in certain order. So should I use return in any and what happens if I do?
-// localhost:3000/valhalla/byName returns viking not found. Why?

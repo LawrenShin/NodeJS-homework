@@ -7,7 +7,7 @@
     "start1_1": "nodemon --exec node hometask_1/1_1.js",
     "start1_2": "nodemon --exec node hometask_1/1_2.js",
     "start1_3": "babel-node hometask_1/1_3.js",
-    "start2_1": "nodemon --exec node hometask_2/2_1.js",
+    "start2_1": "nodemon --exec babel-node hometask_2/2_1.js",
     "test": "echo \\\"Error: no test specified\\\" && exit Hometask 1"
   },
   "keywords": [],
@@ -26,6 +26,7 @@
     "joi": "^17.7.0",
     "node-xlsx": "^0.21.0",
     "random-name": "^0.1.2",
-    "stream-handbook": "^1.0.0"
+    "stream-handbook": "^1.0.0",
+    "uuid": "^9.0.0"
   }
 }

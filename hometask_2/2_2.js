@@ -1,6 +1,6 @@
 // schemas
 const Joi = require("joi");
-const vikingSchema = Joi.object({
+const userSchema = Joi.object({
     id: Joi.number().default(Math.random()),
     name: Joi.string()
         .alphanum()
@@ -14,7 +14,6 @@ const vikingSchema = Joi.object({
         .min(4)
         .max(130)
         .required(),
-    isDeleted: Joi.bool().required(),
 });
 
-module.exports = vikingSchema;
+module.exports = userSchema;
