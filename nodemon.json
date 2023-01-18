@@ -1,0 +1,5 @@
+{
+  "watch": ["hometask_1, hometask_2"],
+  "ext": ".ts,.js",
+  "ignore": []
+}

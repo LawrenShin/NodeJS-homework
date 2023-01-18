@@ -1,3 +1,8 @@
+import express, {Request, Response} from 'express';
+import Joi, {ValidationErrorItem, ValidationResult, Schema} from 'joi';
+import { v4 as uuidv4 } from 'uuid';
+import {userSchema, MappedErrors, IUserToService, IUserToClient} from "./2_2";
+
 // EXAMPLE of user
 // {
 //     "id": "5354554357345",
@@ -6,7 +11,6 @@
 //     "password": 'a2A',
 //     "isDeleted": false
 // }
-
 const defMap = Object.entries(
     {
         "403357.1108310962": {
@@ -75,21 +79,16 @@ const defMap = Object.entries(
     }
 );
 
-
-import express from 'express';
-import Joi from 'joi';
-import userSchema from './2_2';
-import { v4 as uuidv4 } from 'uuid';
-
 // consts
 const app = express();
 const router = express.Router();
 const db = new Map(defMap);
 const port = process.env.PORT || 3000;
 
+const NotFoundByIDMessage = `User with this id not found`;
 
 // helpers
-const mapErrors = (schemaErrors) => {
+const mapErrors = (schemaErrors: ValidationErrorItem[]): MappedErrors => {
     const errors = schemaErrors.map(({ message, path }) => ({ message, path }));
 
     return {
@@ -97,19 +96,20 @@ const mapErrors = (schemaErrors) => {
         errors,
     };
 };
-const userGetter = id => {
+const userGetter = (id: string): IUserToClient | null => {
     const user = db.get(id);
     if (!user || user.isDeleted) {
-        return false;
+        return null;
     }
 
     const { isDeleted, ...rest } = user;
+
     return rest;
 };
-const noServiceFields = arr => arr.map(({isDeleted, ...rest}) => rest);
+const noServiceFields = (arr: IUserToService[]): IUserToClient[] => arr.map(({isDeleted, ...rest}) => rest);
 
 // middlewares
-const getUser = (req, res) => {
+const getUser = (req: Request, res: Response) => {
     const user = userGetter(req.params.id);
 
     if (!user) {
@@ -118,28 +118,29 @@ const getUser = (req, res) => {
         res.json(user);
     }
 };
-const removeUser = (req, res) => {
-    const user = userGetter(req.params.id);
+const removeUser = (req: Request, res: Response) => {
+    const { id } = req.params;
+    const user = userGetter(id);
     if (!user) {
-        res.json({message: `User ${ user.login } not found`});
+        res.json({message: NotFoundByIDMessage});
     } else {
         db.set(req.params.id, { ...user, isDeleted: true });
         res.json({message: `User ${ user.login } has been removed`});
     }
 };
-const updateUser = (req, res) => {
+const updateUser = (req: Request, res: Response) => {
     const user = userGetter(req.params.id);
     const updates = req.body;
     if (!user) {
-        res.json({message: `User ${ user.login } not found`});
+        res.json({message: NotFoundByIDMessage});
     } else {
         db.set(req.params.id, { ...user, ...updates });
         res.json({message: `User ${ user.login } has been updated`});
     }
 };
-const addUser = (req, res) => {
-    const newUser = req.body;
-    const result = userSchema.validate(newUser, { abortEarly: false, allowUnknown: false });
+const addUser = (req: Request, res: Response) => {
+    const newUser: IUserToService = req.body;
+    const result: ValidationResult<Schema> = userSchema.validate(newUser, { abortEarly: false, allowUnknown: false });
 
     if (Joi.isError(result.error)) {
         const mapped = mapErrors(result.error.details);
@@ -150,7 +151,7 @@ const addUser = (req, res) => {
         res.status(201).json({ ...newUser, id });
     }
 };
-const getUserList = (req, res) => {
+const getUserList = (req: Request, res: Response) => {
     const entries = [...db.values()];
     if (!Object.keys(entries).length) {
         res.json({message: 'Database is empty.'});
@@ -158,7 +159,7 @@ const getUserList = (req, res) => {
         res.json(noServiceFields(entries));
     }
 };
-const getUserListByName = (req, res) => {
+const getUserListByName = (req: Request, res: Response) => {
     const { login } = req.params;
     const { limit } = req.query;
     if (!login) {
@@ -170,7 +171,7 @@ const getUserListByName = (req, res) => {
                 .sort((u1, u2) => u1.login.localeCompare(u2.login))
         );
 
-        res.json({ sorted: limit ? sorted.splice(0, limit) : sorted});
+        res.json({ sorted: limit ? sorted.splice(0, Number(limit)) : sorted});
     }
 }
 
