@@ -7,6 +7,6 @@
     "strict": true,
     "skipLibCheck": true,
     "outDir": "build",
-    "rootDir": "hometask_2",
+    "rootDir": "src",
   }
 }

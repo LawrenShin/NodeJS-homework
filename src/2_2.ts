@@ -1,8 +1,7 @@
 import Joi from 'joi';
-import { v4 as uuidv4 } from 'uuid';
+import {InferAttributes, InferCreationAttributes, Model} from "sequelize";
 
 export const userSchema = Joi.object({
-    id: Joi.string().default(uuidv4()),
     login: Joi.string()
         .alphanum()
         .min(3)
@@ -18,14 +17,16 @@ export const userSchema = Joi.object({
 });
 
 // interfaces
-export interface IUserToClient {
-    id: string;
+export interface IUserBasic {
     login: string;
     password: string;
     age: number;
 }
+export interface IUserToClient extends IUserBasic{
+    id: string;
+}
 export interface IUserToService extends IUserToClient {
-    isDeleted: boolean;
+    isdeleted: boolean;
 }
 export interface MappedErrors {
     errors: {
@@ -33,4 +34,13 @@ export interface MappedErrors {
         message: string
     }[];
     status: string
+}
+
+// model types
+export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+    declare id: string;
+    declare login: string;
+    declare password: string;
+    declare age: number;
+    declare isdeleted: boolean;
 }
