@@ -46,4 +46,7 @@ app.use(router);
 app.listen(port);
 
 // Note: Sorry, as I am running late for homeworks this one is a little bit unfinished with splitting
+// - No need to be sorry. All of us are working :). No problem.
+
 // please advice me on how to split routes with loaders. I was not able to plit it properly and keep my app working. Getting errors such as => Cannot GET /users</
+// - App is working until this commit. I will make reviews for other things at next commits. 
