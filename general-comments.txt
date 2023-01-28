@@ -1,0 +1,1 @@
+- Please use .gitignore at the root. You should consider that everybody doesnt have to use intellij or other jetbrains ide. 

@@ -14,6 +14,11 @@ sequelize.authenticate()
         console.log(err)
     });
 
+// If you don't sync your tables wont be created by sequelize
+sequelize.sync().then(() => {
+    console.log("All models were synchronized successfully.");
+});
+
 const {
     getUserListByName,
     removeUser,

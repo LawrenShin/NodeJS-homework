@@ -1,3 +1,5 @@
 import {Sequelize} from "sequelize";
 
-export const sequelize = new Sequelize('postgres://newuser:pasword@localhost:5432/users_node_homework');
+// use process environments for credentials. You can use dotenv file for that. 
+// And create .env.template or .env.example for env file. 
+export const sequelize = new Sequelize('postgres://postgres:password@localhost:5432/task3'); 
