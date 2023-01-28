@@ -1,7 +1,7 @@
 // Create a route file for each resource to be exposed, in this case /users
 // with this you seperate your routing logic for each resource (endpoint) to related and seperate files
 import express from "express";
-import { addUser, getUserList } from "../dataAccess/middlewares";
+import { addUser, getUserList } from "../dataAccess/middlewares"; // name this as controller
 
 const usersRouter = express.Router();
 

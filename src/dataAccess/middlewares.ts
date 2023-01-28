@@ -14,6 +14,20 @@ import { User } from "../models";
 
 const NotFoundByIDMessage = `User with this id not found`;
 
+// Considering this as a controller file not a middleware;
+// get releated datas from request object
+// pass needed datas to services. for example
+/**
+const userId = req.params.id;
+try {
+    const user = await UserService.getUserById(userId);
+    return res.status(200).json({data: user})
+} catch(error) {
+    // do whatever you want with the error and return an error response or pass it to the global error handler
+    next(error);
+}
+ */
+
 export const getUser = async (req: Request, res: Response) => {
     const user = await userGetter(req.params.id);
 

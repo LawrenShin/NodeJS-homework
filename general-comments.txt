@@ -1,1 +1,2 @@
 - Please use .gitignore at the root. You should consider that everybody doesnt have to use intellij or other jetbrains ide. 
+- Forgot to mention: Creating pull requests help you and reviewer to be able see changes and reviewing it.

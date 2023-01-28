@@ -3,6 +3,9 @@ import {Schema, ValidationErrorItem, ValidationResult} from "joi";
 import {User} from "../models";
 import {userSchema} from "./validationSchemas";
 
+
+// if the below codes related to the User logic mode them to a seperate UserService.ts file. and you can export it here or directly from its own file.
+
 export const validateUser = (newUser: IUserToService): ValidationResult<Schema<IUserBasic>> => {
     return userSchema.validate(newUser, { abortEarly: false, allowUnknown: false });
 };
@@ -28,6 +31,13 @@ export const userGetter = async (id?: string) => {
     const options = {raw: true};
 
     if (id) {
+        // this finding user from database etc. is basically a dataAccess operation.
+        // So you can make a UserDAL.ts (user data access layer) file or UserDAO.ts (user data access object) under dataaccess folder
+        // pick one of the naming. just be consistent.
+        // and you can then use it like;
+        /**
+         const user = await UserDAL.findOne(id); // we dont care how data is getting fetched. we just code our logic and ask dataaccess to bring us data.
+         */
         const result = await User.findOne({where: {id: id}, ...options});
         if (result?.isdeleted) {
             return null;
