@@ -50,7 +50,8 @@ export const addUser = async (req: Request, res: Response) => {
         if (result) {
             res.json({ result: noServiceFields(result), status: 201 });
         } else {
-            res.json({ message: 'User already exist', status: 400 });
+            // keep consistent. Returning response is different than above.
+            res.json({ message: 'User already exist', status: 400 }); // this sends a 200 OK request. but in the body you are saying no it is a bad request. 
         }
     }
 };
