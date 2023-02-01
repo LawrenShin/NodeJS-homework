@@ -1,15 +1,17 @@
-// Create a route file for each resource to be exposed, in this case /users
-// with this you seperate your routing logic for each resource (endpoint) to related and seperate files
 import express from "express";
-import { addUser, getUserList } from "../dataAccess/middlewares"; // name this as controller
+import {addUser, getUser, getUserList, getUserListByName, removeUser, updateUser} from "../dataAccess/controllers";
 
 const usersRouter = express.Router();
 
 usersRouter.route("/")
     .post(addUser)
     .get(getUserList);
+usersRouter.route("/:id")
+    .get(getUser)
+    .delete(removeUser)
+    .patch(updateUser);
 
-// i did a sample above. it is working but you should add others. like below
-// usersRouter.route("/:id").get(getUserById)
+usersRouter.route('/byName/:login')
+    .get(getUserListByName);
 
 export { usersRouter };

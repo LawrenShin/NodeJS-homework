@@ -1,3 +1,3 @@
-import * as middlewares from './middlewares';
+import * as controllers from './controllers';
 
-export {middlewares};
+export {controllers};
