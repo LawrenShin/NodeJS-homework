@@ -1,16 +1,9 @@
 import {NextFunction, Request, Response} from "express";
 import Joi from "joi";
 import { IUserBasic } from "../types";
-import {
-    handleUpdateUser,
-    handleUserCreation,
-    handleUserListByName,
-    mapErrors,
-    noServiceFields,
-    userGetter,
-    validateUser
-} from "../services";
+import {mapErrors, noServiceFields, validateUser} from "../services";
 import UserDAO from "./UserDAO";
+import {handleUpdateUser, handleUserCreation, handleUserListByName, userGetter} from "./userOperations";
 
 
 const NotFoundByIDMessage = `User with this id not found`;

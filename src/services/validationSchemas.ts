@@ -14,3 +14,12 @@ export const userSchema = Joi.object({
         .max(130)
         .required()
 });
+
+export const groupSchema = Joi.object({
+    name: Joi.string()
+        .alphanum()
+        .min(3)
+        .max(30)
+        .required(),
+    permissions: Joi.string().default(''),
+})

@@ -5,7 +5,7 @@ export interface Options {
     [key: string]: any;
 }
 
-const baseOptions = {raw: true};
+export const baseOptions = {raw: true};
 
 const UserDAO = {
     getAll: () => User.findAll(),

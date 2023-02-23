@@ -6,7 +6,7 @@ export const mapErrors = (schemaErrors: ValidationErrorItem[]): MappedErrors => 
     const errors = schemaErrors.map(({ message, path }) => ({ message, path }));
 
     return {
-        status: 'failed',
+        status: schemaErrors.length ? 'failed' : 'success',
         errors,
     };
 };
