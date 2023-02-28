@@ -18,6 +18,12 @@ export class Group extends Model<InferAttributes<Group>, InferCreationAttributes
     declare permissions: Array<Permission>;
 }
 
+export class UsersGroup extends Model<InferAttributes<UsersGroup>, InferCreationAttributes<UsersGroup>>{
+    declare users_id: string;
+    declare group_id: string;
+    declare user_group_pkey: string;
+}
+
 export interface IGroup {
     id: string;
     name: string;
@@ -80,3 +86,21 @@ Group.init({
         allowNull: false,
     }
 }, {tableName: 'groups', timestamps: false, sequelize});
+
+UsersGroup.init({
+    user_group_pkey: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
+    group_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    users_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
+}, {tableName: "user_group", sequelize});
+
+Group.hasMany(User);

@@ -32,4 +32,11 @@ app.listen(port);
 // - No need to be sorry. All of us are working :). No problem.
 
 // please advice me on how to split routes with loaders. I was not able to plit it properly and keep my app working. Getting errors such as => Cannot GET /users</
-// - App is working until this commit. I will make reviews for other things at next commits. 
+// - App is working until this commit. I will make reviews for other things at next commits.
+
+// script
+// CREATE TABLE user_group (
+//     user_id  int REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE
+//     , group_id  int REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE
+//     , CONSTRAINT user_group_pkey PRIMARY KEY (user_id, group_id)  -- explicit pk
+// );

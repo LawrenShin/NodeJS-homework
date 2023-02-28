@@ -8,7 +8,7 @@ export interface Options {
 export const baseOptions = {raw: true};
 
 const UserDAO = {
-    getAll: () => User.findAll(),
+    getAll: () => User.findAll(baseOptions),
     create: (user: IUserToService) => User.create(user, baseOptions),
     getConditionally :(options?: Options): Promise<User | User[] | null> => User.findOne({...options, ...baseOptions}),
     update: (id: string, updates: Partial<IUserToService>) => User.update(updates, {where: {id}}),

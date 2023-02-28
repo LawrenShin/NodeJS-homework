@@ -12,7 +12,7 @@ export const getGroup = async (req: Request, res: Response) => {
     if (group) {
         return res.json(group);
     } else {
-        return res.status(404).json({ error: 'Group not found.' })
+        return res.status(404).json({ error: 'Group not found.' });
     }
 };
 

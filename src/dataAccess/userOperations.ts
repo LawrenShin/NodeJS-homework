@@ -4,15 +4,19 @@ import {noServiceFields, sortUsersByName} from "../services";
 
 
 export const userGetter = async (id?: string) => {
-    if (id) {
-        const user = await UserDAO.getById(id);
-        if (user?.isdeleted) {
-            return null;
+    try {
+        if (id) {
+            const user = await UserDAO.getById(id);
+            if (user?.isdeleted) {
+                return null;
+            }
+            return user;
+        } else {
+            const allUsers = await UserDAO.getAll();
+            return allUsers.filter(r => !r.isdeleted);
         }
-        return user;
-    } else {
-        const allUsers = await UserDAO.getAll();
-        return allUsers.filter(r => !r.isdeleted);
+    } catch (e) {
+        console.log(e);
     }
 };
 

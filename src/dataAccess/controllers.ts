@@ -4,9 +4,23 @@ import { IUserBasic } from "../types";
 import {mapErrors, noServiceFields, validateUser} from "../services";
 import UserDAO from "./UserDAO";
 import {handleUpdateUser, handleUserCreation, handleUserListByName, userGetter} from "./userOperations";
+import {addUsersToGroup} from "./usersGroupsOperations";
 
 
 const NotFoundByIDMessage = `User with this id not found`;
+
+export const handleAddUsersToGroup = async (req: Request, res: Response) => {
+    try {
+        const {users, group} = req.params;
+        const result = await addUsersToGroup(group, users.split(','));
+        if (result) {
+            res.json(`Users added to group`);
+        }
+    } catch (e) {
+        console.log('Problems', e);
+        res.status(500).json(e);
+    }
+}
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -47,6 +61,7 @@ export const addUser = async (req: Request, res: Response, next: NextFunction) =
 export const getUserList = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userList = await userGetter();
+        console.log(userList)
 
         if (Array.isArray(userList)) {
             if (!userList.length) {
@@ -55,6 +70,7 @@ export const getUserList = async (req: Request, res: Response, next: NextFunctio
             res.json(noServiceFields(userList));
         }
     } catch (e) {
+        res.status(500).json(e);
         next(e);
     }
 };
